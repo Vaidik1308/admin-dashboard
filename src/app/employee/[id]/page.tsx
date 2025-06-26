@@ -10,6 +10,7 @@ import Button from '@/components/ui/Button';
 import Rating from '@/components/ui/Rating';
 import Badge from '@/components/ui/Badge';
 import { useDarkMode } from '@/hooks/useDarkMode';
+import AnimatedElement from '@/components/common/AnimateElement';
 import { 
   ArrowLeft, 
   Mail, 
@@ -19,10 +20,10 @@ import {
   Calendar,
   TrendingUp,
   Bookmark,
-  Star,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  User
 } from 'lucide-react';
 import { formatDate, getStatusColor } from '@/lib/utils';
 
@@ -44,7 +45,7 @@ export default function EmployeeDetail() {
   
   useEffect(() => {
     if (employeeId) {
-      setPerformanceHistory(generatePerformanceHistory(employeeId));
+      setPerformanceHistory(generatePerformanceHistory());
       setProjects(generateProjects());
       setFeedback(generateFeedback());
     }
@@ -75,10 +76,10 @@ export default function EmployeeDetail() {
   
   if (!employee) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-background">
         <Navigation darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
+          <AnimatedElement className="text-center" variant="fadeInUp" delay={0.2} duration={0.5}>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Employee not found
             </h1>
@@ -86,19 +87,19 @@ export default function EmployeeDetail() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Button>
-          </div>
+          </AnimatedElement>
         </div>
       </div>
     );
   }
   
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <Navigation darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
+        <AnimatedElement className="mb-8" variant="fadeInUp" delay={0.2} duration={0.5}>
           <Button
             variant="ghost"
             onClick={() => router.push('/')}
@@ -111,10 +112,18 @@ export default function EmployeeDetail() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div className="flex-1">
-                <div className="flex items-center gap-4 mb-4">
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    {employee.firstName} {employee.lastName}
-                  </h1>
+                <div className="flex items-start md:items-center gap-4 mb-4 md:flex-row flex-col">
+                  <div className="flex items-center gap-2">
+                    <User className="md:size-8 size-6 text-blue-600 dark:text-blue-400" />
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight flex gap-2">
+                      <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
+                        {employee.firstName}
+                      </span>
+                      <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400">
+                        {employee.lastName}
+                      </span>
+                    </h1>
+                  </div>
                   <Badge 
                     variant={employee.performance >= 4 ? 'success' : employee.performance >= 3 ? 'warning' : 'danger'}
                   >
@@ -142,7 +151,7 @@ export default function EmployeeDetail() {
                 </div>
               </div>
               
-              <div className="flex gap-2 mt-4 md:mt-0">
+              <div className="flex gap-2 mt-4 md:mt-0 md:flex-row flex-col w-full">
                 <Button
                   variant={isBookmarked ? 'primary' : 'outline'}
                   onClick={handleBookmark}
@@ -157,10 +166,10 @@ export default function EmployeeDetail() {
               </div>
             </div>
           </div>
-        </div>
+        </AnimatedElement>
         
         {/* Tabs */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <AnimatedElement className="bg-white dark:bg-gray-800 rounded-lg shadow" variant="fadeInUp" delay={0.4} duration={0.5}>
           <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8 px-6">
               {[
@@ -186,12 +195,12 @@ export default function EmployeeDetail() {
           <div className="p-6">
             {/* Overview Tab */}
             {activeTab === 'overview' && (
-              <div className="space-y-6">
+              <AnimatedElement className="space-y-6" variant="fadeInUp" delay={0.6} duration={0.5}>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                     Bio
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-600 dark:text-gray-400 leading-tight text-sm md:text-base md:leading-relaxed">
                     {employee.bio}
                   </p>
                 </div>
@@ -214,26 +223,38 @@ export default function EmployeeDetail() {
                     Performance History
                   </h3>
                   <div className="space-y-3">
-                    {performanceHistory.map((record) => (
-                      <div key={record.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    {performanceHistory.map((record, index) => (
+                      <AnimatedElement
+                        key={record.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                        variant="fadeInUp"
+                        delay={0.8 + (index * 0.1)}
+                        duration={0.3}
+                      >
                         <div>
                           <p className="font-medium text-gray-900 dark:text-white">{record.date}</p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">{record.feedback}</p>
                           <p className="text-xs text-gray-500 dark:text-gray-500">Reviewed by {record.reviewer}</p>
                         </div>
                         <Rating rating={record.rating} size="sm" />
-                      </div>
+                      </AnimatedElement>
                     ))}
                   </div>
                 </div>
-              </div>
+              </AnimatedElement>
             )}
             
             {/* Projects Tab */}
             {activeTab === 'projects' && (
-              <div className="space-y-4">
-                {projects.map((project) => (
-                  <div key={project.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <AnimatedElement className="space-y-4" variant="fadeInUp" delay={0.6} duration={0.5}>
+                {projects.map((project, index) => (
+                  <AnimatedElement
+                    key={project.id}
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                    variant="fadeInUp"
+                    delay={0.8 + (index * 0.1)}
+                    duration={0.3}
+                  >
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h4 className="font-semibold text-gray-900 dark:text-white">{project.name}</h4>
@@ -251,16 +272,22 @@ export default function EmployeeDetail() {
                       <span>Started: {formatDate(project.startDate)}</span>
                       {project.endDate && <span>Ended: {formatDate(project.endDate)}</span>}
                     </div>
-                  </div>
+                  </AnimatedElement>
                 ))}
-              </div>
+              </AnimatedElement>
             )}
             
             {/* Feedback Tab */}
             {activeTab === 'feedback' && (
-              <div className="space-y-4">
-                {feedback.map((item) => (
-                  <div key={item.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <AnimatedElement className="space-y-4" variant="fadeInUp" delay={0.6} duration={0.5}>
+                {feedback.map((item, index) => (
+                  <AnimatedElement
+                    key={item.id}
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                    variant="fadeInUp"
+                    delay={0.8 + (index * 0.1)}
+                    duration={0.3}
+                  >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <Badge 
@@ -281,12 +308,12 @@ export default function EmployeeDetail() {
                       </span>
                     </div>
                     <p className="text-gray-700 dark:text-gray-300">{item.message}</p>
-                  </div>
+                  </AnimatedElement>
                 ))}
-              </div>
+              </AnimatedElement>
             )}
           </div>
-        </div>
+        </AnimatedElement>
       </div>
     </div>
   );

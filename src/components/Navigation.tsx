@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BarChart3, Moon, Sun, BookmarkCheck, Menu, X } from 'lucide-react';
+import { Home, BarChart3, BookmarkCheck, Menu, X } from 'lucide-react';
 import { useHRStore } from '@/lib/store';
 import AnimatedElement from './common/AnimateElement';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,7 +13,7 @@ interface NavigationProps {
   onToggleDarkMode: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ darkMode, onToggleDarkMode }) => {
+const Navigation: React.FC<NavigationProps> = () => {
   const pathname = usePathname();
   const { bookmarkedEmployees } = useHRStore();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

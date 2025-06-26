@@ -1,103 +1,161 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useHRStore } from '@/lib/store';
+import { fetchEmployees } from '@/lib/api';
+import EmployeeCard from '@/components/EmployeeCard';
+import SearchAndFilter from '@/components/SearchAndFilter';
+import Navigation from '@/components/Navigation';
+import { useDarkMode } from '@/hooks/useDarkMode';
+import { Loader2, Users, TrendingUp, Star } from 'lucide-react';
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+export default function Dashboard() {
+  const router = useRouter();
+  const { darkMode, toggleDarkMode } = useDarkMode();
+  const { 
+    employees, 
+    setEmployees, 
+    filteredEmployees, 
+    isLoading, 
+    setLoading, 
+    error, 
+    setError 
+  } = useHRStore();
+  
+  useEffect(() => {
+    const loadEmployees = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchEmployees();
+        setEmployees(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load employees');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (employees.length === 0) {
+      loadEmployees();
+    }
+  }, [employees.length, setEmployees, setLoading, setError]);
+  
+  const handleViewEmployee = (id: number) => {
+    router.push(`/employee/${id}`);
+  };
+  
+  const filteredEmployeesList = filteredEmployees();
+  
+  // Calculate stats
+  const totalEmployees = employees.length;
+  const averageRating = employees.length > 0 
+    ? (employees.reduce((sum, emp) => sum + emp.performance, 0) / employees.length).toFixed(1)
+    : '0.0';
+  const highPerformers = employees.filter(emp => emp.performance >= 4).length;
+  
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Navigation darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p className="text-red-800 dark:text-red-200">{error}</p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Navigation darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Employee Dashboard
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Manage and track employee performance across your organization
+          </p>
+        </div>
+        
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Employees</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalEmployees}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                <Star className="w-6 h-6 text-green-600 dark:text-green-400" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Rating</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{averageRating}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">High Performers</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{highPerformers}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Search and Filter */}
+        <div className="mb-8">
+          <SearchAndFilter />
+        </div>
+        
+        {/* Employee Grid */}
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="flex items-center space-x-2">
+              <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+              <span className="text-gray-600 dark:text-gray-400">Loading employees...</span>
+            </div>
+          </div>
+        ) : filteredEmployeesList.length === 0 ? (
+          <div className="text-center py-12">
+            <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              No employees found
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              Try adjusting your search or filter criteria
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredEmployeesList.map((employee) => (
+              <EmployeeCard
+                key={employee.id}
+                employee={employee}
+                onView={handleViewEmployee}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

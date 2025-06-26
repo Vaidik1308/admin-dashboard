@@ -7,7 +7,7 @@ import EmployeeCard from '@/components/EmployeeCard';
 import Navigation from '@/components/Navigation';
 import Button from '@/components/ui/Button';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { Bookmark, Users, TrendingUp, Star, Trash2 } from 'lucide-react';
+import { Bookmark, Users, TrendingUp, Star, Trash2, BookmarkCheck } from 'lucide-react';
 
 export default function Bookmarks() {
   const router = useRouter();
@@ -38,14 +38,14 @@ export default function Bookmarks() {
   const highPerformers = bookmarkedEmployees.filter(emp => emp.performance >= 4).length;
   
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <Navigation darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Bookmark className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+            <BookmarkCheck className="w-8 h-8 text-blue-600 dark:text-blue-400" />
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               Bookmarked Employees
             </h1>
@@ -60,7 +60,7 @@ export default function Bookmarks() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                <Bookmark className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <BookmarkCheck  className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Bookmarks</p>

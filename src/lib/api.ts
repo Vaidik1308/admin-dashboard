@@ -11,7 +11,22 @@ const departments = [
   'Product'
 ];
 
-const generateMockEmployee = (user: any): Employee => {
+interface DummyUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  age: number;
+  address: {
+    address: string;
+    city: string;
+    state: string;
+    postalCode: string;
+  };
+  phone: string;
+}
+
+const generateMockEmployee = (user: DummyUser): Employee => {
   const department = departments[Math.floor(Math.random() * departments.length)];
   const performance = Math.floor(Math.random() * 5) + 1;
   
@@ -34,9 +49,25 @@ const generateMockEmployee = (user: any): Employee => {
   };
 };
 
-export const fetchEmployees = async (): Promise<Employee[]> => {
+export const fetchEmployees = async (page: number = 1, limit: number = 12): Promise<{ employees: Employee[], hasMore: boolean }> => {
   try {
-    const response = await fetch('https://dummyjson.com/users?limit=20');
+    const skip = (page - 1) * limit;
+    const response = await fetch(`https://dummyjson.com/users?limit=${limit}&skip=${skip}`);
+    const data = await response.json();
+    
+    const employees = data.users.map(generateMockEmployee);
+    const hasMore = data.total > skip + limit;
+    
+    return { employees, hasMore };
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+    throw new Error('Failed to fetch employees');
+  }
+};
+
+export const fetchAllEmployees = async (): Promise<Employee[]> => {
+  try {
+    const response = await fetch('https://dummyjson.com/users?limit=100');
     const data = await response.json();
     
     return data.users.map(generateMockEmployee);
@@ -46,7 +77,7 @@ export const fetchEmployees = async (): Promise<Employee[]> => {
   }
 };
 
-export const generatePerformanceHistory = (employeeId: number): PerformanceHistory[] => {
+export const generatePerformanceHistory = (): PerformanceHistory[] => {
   const history = [];
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   

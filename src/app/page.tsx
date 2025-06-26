@@ -9,6 +9,8 @@ import SearchAndFilter from '@/components/SearchAndFilter';
 import Navigation from '@/components/Navigation';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { Loader2, Users, TrendingUp, Star } from 'lucide-react';
+import AnimatedElement from '@/components/common/AnimateElement';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -16,36 +18,66 @@ export default function Dashboard() {
   const { 
     employees, 
     setEmployees, 
-    filteredEmployees, 
+    addEmployees,
+    paginatedEmployees, 
     isLoading, 
     setLoading, 
     error, 
-    setError 
+    setError,
+    currentPage,
+    setCurrentPage,
+    hasMore,
+    setHasMore
   } = useHRStore();
   
-  useEffect(() => {
-    const loadEmployees = async () => {
+  const loadMoreEmployees = async () => {
+    if (isLoading || !hasMore) return;
+    
+    try {
       setLoading(true);
-      try {
-        const data = await fetchEmployees();
-        setEmployees(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load employees');
-      } finally {
-        setLoading(false);
+      const nextPage = currentPage + 1;
+      const { employees: newEmployees, hasMore: moreAvailable } = await fetchEmployees(nextPage, 12);
+      
+      addEmployees(newEmployees);
+      setCurrentPage(nextPage);
+      setHasMore(moreAvailable);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load more employees');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const { observer, isLoading: infiniteLoading } = useInfiniteScroll(loadMoreEmployees, {
+    enabled: hasMore && !isLoading,
+    threshold: 0.1,
+    rootMargin: '100px'
+  });
+  
+  useEffect(() => {
+    const loadInitialEmployees = async () => {
+      if (employees.length === 0) {
+        setLoading(true);
+        try {
+          const { employees: initialEmployees, hasMore: moreAvailable } = await fetchEmployees(1, 12);
+          setEmployees(initialEmployees);
+          setHasMore(moreAvailable);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Failed to load employees');
+        } finally {
+          setLoading(false);
+        }
       }
     };
     
-    if (employees.length === 0) {
-      loadEmployees();
-    }
-  }, [employees.length, setEmployees, setLoading, setError]);
+    loadInitialEmployees();
+  }, [employees.length, setEmployees, setLoading, setError, setHasMore]);
   
   const handleViewEmployee = (id: number) => {
     router.push(`/employee/${id}`);
   };
   
-  const filteredEmployeesList = filteredEmployees();
+  const paginatedEmployeesList = paginatedEmployees();
   
   // Calculate stats
   const totalEmployees = employees.length;
@@ -68,23 +100,23 @@ export default function Dashboard() {
   }
   
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <Navigation darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
+        <AnimatedElement className="mb-8" variant="fadeInUp" delay={0.2} duration={0.5}>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Employee Dashboard
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
             Manage and track employee performance across your organization
           </p>
-        </div>
+        </AnimatedElement>
         
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <AnimatedElement className="bg-white dark:bg-gray-800 rounded-lg shadow p-6" variant="fadeInUp" delay={0.2} duration={0.5}>
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
                 <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -94,9 +126,9 @@ export default function Dashboard() {
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalEmployees}</p>
               </div>
             </div>
-          </div>
+          </AnimatedElement>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <AnimatedElement className="bg-white dark:bg-gray-800 rounded-lg shadow p-6" variant="fadeInUp" delay={0.4} duration={0.5}>
             <div className="flex items-center">
               <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
                 <Star className="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -106,9 +138,9 @@ export default function Dashboard() {
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">{averageRating}</p>
               </div>
             </div>
-          </div>
+          </AnimatedElement>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <AnimatedElement className="bg-white dark:bg-gray-800 rounded-lg shadow p-6" variant="fadeInUp" delay={0.6} duration={0.5}>
             <div className="flex items-center">
               <div className="p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg">
                 <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
@@ -118,23 +150,23 @@ export default function Dashboard() {
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">{highPerformers}</p>
               </div>
             </div>
-          </div>
+          </AnimatedElement>
         </div>
         
         {/* Search and Filter */}
-        <div className="mb-8">
+        <AnimatedElement className="mb-8" variant="fadeInUp" delay={0.8} duration={0.5}>
           <SearchAndFilter />
-        </div>
+        </AnimatedElement>
         
         {/* Employee Grid */}
-        {isLoading ? (
+        {isLoading && employees.length === 0 ? (
           <div className="flex justify-center items-center py-12">
             <div className="flex items-center space-x-2">
               <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
               <span className="text-gray-600 dark:text-gray-400">Loading employees...</span>
             </div>
           </div>
-        ) : filteredEmployeesList.length === 0 ? (
+        ) : paginatedEmployeesList.length === 0 ? (
           <div className="text-center py-12">
             <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
@@ -145,15 +177,47 @@ export default function Dashboard() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEmployeesList.map((employee) => (
-              <EmployeeCard
-                key={employee.id}
-                employee={employee}
-                onView={handleViewEmployee}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedEmployeesList.map((employee, index) => (
+                <AnimatedElement
+                  key={employee.id}
+                  variant="fadeInUp"
+                  delay={0.1 * (index % 12)}
+                  duration={0.5}
+                >
+                  <EmployeeCard
+                    employee={employee}
+                    onView={handleViewEmployee}
+                  />
+                </AnimatedElement>
+              ))}
+            </div>
+            
+            {/* Infinite Scroll Trigger */}
+            {hasMore && (
+              <div 
+                ref={observer}
+                className="flex justify-center items-center py-8"
+              >
+                {infiniteLoading && (
+                  <div className="flex items-center space-x-2">
+                    <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+                    <span className="text-gray-600 dark:text-gray-400">Loading more employees...</span>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {/* End of Results */}
+            {!hasMore && employees.length > 0 && (
+              <div className="text-center py-8">
+                <p className="text-gray-500 dark:text-gray-400">
+                  You&apos;ve reached the end of the employee list
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Bookmark, Eye, TrendingUp, Mail, MapPin, Building } from 'lucide-react';
+import { Bookmark, Eye, TrendingUp, Mail, MapPin, Building, MailIcon, BookmarkCheck } from 'lucide-react';
 import { Employee } from '@/types';
 import Button from './ui/Button';
 import Rating from './ui/Rating';
 import Badge from './ui/Badge';
 import { useHRStore } from '@/lib/store';
 import { getPerformanceColor } from '@/lib/utils';
+import AnimatedElement from './common/AnimateElement';
 
 interface EmployeeCardProps {
   employee: Employee;
@@ -26,7 +27,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, onView }) => {
   };
   
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-gray-700">
+  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-gray-700">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
@@ -35,7 +36,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, onView }) => {
               {employee.firstName} {employee.lastName}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1 mt-1">
-              <Mail className="w-3 h-3" />
+              <MailIcon className="size-3 text-red-500" />
               {employee.email}
             </p>
           </div>
@@ -47,7 +48,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, onView }) => {
                 : 'text-gray-400 hover:text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
             }`}
           >
-            <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
+            {isBookmarked ? <BookmarkCheck className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} /> : <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />}
           </button>
         </div>
         

@@ -35,7 +35,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, onView }) => {
   };
   
   return (
-  <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-none">
+  <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-none">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">

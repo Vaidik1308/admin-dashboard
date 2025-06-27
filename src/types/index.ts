@@ -52,4 +52,24 @@ export interface DepartmentStats {
 export interface BookmarkTrend {
   date: string;
   count: number;
+}
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'manager';
+  avatar?: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface AuthState {
+  user: AdminUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
 } 

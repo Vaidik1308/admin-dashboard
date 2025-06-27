@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

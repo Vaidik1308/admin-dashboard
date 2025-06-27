@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, BarChart3, BookmarkCheck, Menu, X } from 'lucide-react';
 import { useHRStore } from '@/lib/store';
+import { UserMenu } from '@/components/common/UserMenu';
 import AnimatedElement from './common/AnimateElement';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -63,11 +64,11 @@ const Navigation: React.FC<NavigationProps> = () => {
                       >
                         <Icon className="w-4 h-4 mr-2" />
                         {item.label}
-                        {item.badge && item.badge > 0 && (
+                        {(item.badge && item.badge > 0) ? (
                           <span className="ml-2 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                             {item.badge}
                           </span>
-                        )}
+                        ): null}
                       </Link>
                     </AnimatedElement>
                   );
@@ -76,6 +77,9 @@ const Navigation: React.FC<NavigationProps> = () => {
             </div>
             
             <div className="flex items-center space-x-0">
+              {/* User Menu */}
+              <UserMenu />
+              
               {/* Mobile menu button */}
               <button
                 onClick={toggleSidebar}
@@ -152,11 +156,11 @@ const Navigation: React.FC<NavigationProps> = () => {
                       >
                         <Icon className="w-5 h-5 mr-3" />
                         {item.label}
-                        {item.badge && item.badge > 0 && (
+                        {(item.badge && item.badge > 0) ? (
                           <span className="ml-auto bg-blue-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
                             {item.badge}
                           </span>
-                        )}
+                        ): null}
                       </Link>
                     </motion.div>
                   );

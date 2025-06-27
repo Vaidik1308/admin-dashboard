@@ -239,7 +239,7 @@ export default function Analytics() {
           
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <AnimatedElement className="bg-gradient-to-r from-blue-700 to-blue-800 border-blue-800 bg-blue-600 hover:bg-blue-700 text-gray-900 dark:text-white flex items-center justify-center md:justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.2} duration={0.5}>
+            <AnimatedElement className="bg-gradient-to-r from-blue-700 to-blue-800 border-blue-800 bg-blue-600 hover:bg-blue-700 text-gray-900 dark:text-white flex items-center justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.2} duration={0.5}>
               <div className="flex items-center">
                 <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                   <Users className="w-6 h-6 text-blue-800 dark:text-blue-200" />
@@ -251,7 +251,7 @@ export default function Analytics() {
               </div>
             </AnimatedElement>
             
-            <AnimatedElement className="bg-gradient-to-r from-green-600 to-green-700 border-green-800 bg-green-600 hover:bg-green-700 text-gray-900 dark:text-white flex items-center justify-center md:justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.4} duration={0.5}>
+            <AnimatedElement className="bg-gradient-to-r from-green-600 to-green-700 border-green-800 bg-green-600 hover:bg-green-700 text-gray-900 dark:text-white flex items-center justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.4} duration={0.5}>
               <div className="flex items-center">
                 <div className="p-2 bg-green-100 dark:bg-green-700 rounded-lg">
                   <Star className="w-6 h-6 text-green-800 dark:text-green-200" />
@@ -263,7 +263,7 @@ export default function Analytics() {
               </div>
             </AnimatedElement>
             
-            <AnimatedElement className="bg-gradient-to-r from-yellow-500 to-yellow-600 border-yellow-800 bg-yellow-600 hover:bg-yellow-700 text-gray-900 dark:text-white flex items-center justify-center md:justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.6} duration={0.5}>
+            <AnimatedElement className="bg-gradient-to-r from-yellow-500 to-yellow-600 border-yellow-800 bg-yellow-600 hover:bg-yellow-700 text-gray-900 dark:text-white flex items-center justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.6} duration={0.5}>
               <div className="flex items-center">
                 <div className="p-2 bg-yellow-100 dark:bg-yellow-700 rounded-lg">
                   <TrendingUp className="w-6 h-6 text-yellow-800 dark:text-yellow-200" />
@@ -275,7 +275,7 @@ export default function Analytics() {
               </div>
             </AnimatedElement>
             
-            <AnimatedElement className="bg-gradient-to-r from-purple-600 to-purple-700 border-purple-800 bg-purple-600 hover:bg-purple-700 text-gray-900 dark:text-white flex items-center justify-center md:justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.8} duration={0.5}>
+            <AnimatedElement className="bg-gradient-to-r from-purple-600 to-purple-700 border-purple-800 bg-purple-600 hover:bg-purple-700 text-gray-900 dark:text-white flex items-center justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.8} duration={0.5}>
               <div className="flex items-center">
                 <div className="p-2 bg-purple-100 dark:bg-purple-700 rounded-lg">
                   <BarChart3 className="w-6 h-6 text-purple-800 dark:text-purple-200" />

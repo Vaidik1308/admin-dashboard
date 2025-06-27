@@ -125,7 +125,7 @@ export default function Dashboard() {
           </div>
         </AnimatedElement>
         
-        <AnimatedElement className="bg-gradient-to-r from-green-600 to-green-700border-green-800 bg-green-600 hover:bg-green-700 text-gray-900 dark:text-white flex items-center justify-center md:justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.4} duration={0.5}>
+        <AnimatedElement className="bg-gradient-to-r from-green-600 to-green-700border-green-800 bg-green-600 hover:bg-green-700 text-gray-900 dark:text-white flex items-center justify-start rounded-lg shadow p-6" variant="fadeInUp" delay={0.4} duration={0.5}>
           <div className="flex items-center">
             <div className="p-2 bg-green-100 dark:bg-green-700 rounded-lg">
               <Star className="w-6 h-6 text-green-800 dark:text-green-200" />
